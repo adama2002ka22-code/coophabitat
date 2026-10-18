@@ -1,0 +1,644 @@
+<!-- ================= 1. PAGE DE CONNEXION ================= -->
+<div class="landing-universe" *ngIf="!isLoggedIn">
+  <div class="hero-visual-side">
+    <div class="hero-glass-overlay">
+      <div class="brand-badge-box">
+        <div class="gold-cube-icon"><i class="pi pi-home"></i></div>
+        <span>CoopHabitat Sénégal</span>
+      </div>
+      <div class="hero-copy">
+        <h1>L'excellence architecturale et financière pour votre coopérative.</h1>
+        <p>Pilotez le foncier, sécurisez la trésorerie et unifiez votre communauté sur une plateforme intelligente et intuitive.</p>
+        <div class="quote-pill">"Plus qu'une coopérative, une famille bâtisseuse."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-interactive-side">
+    <div class="auth-card-elevated">
+      <div class="auth-card-header">
+        <h2>Connexion Sécurisée</h2>
+        <p>Entrez votre email (Saisissez <strong>president@coophabitat.sn</strong> pour l'Admin, ou un autre email pour le Membre)</p>
+      </div>
+
+      <div class="auth-form-body">
+        <div class="input-field-wrapper">
+          <label>Email / Identifiant</label>
+          <div class="input-inner">
+            <i class="pi pi-user"></i>
+            <input type="text" [(ngModel)]="loginEmail" placeholder="ex: coumbel.ka@coophabitat.sn ou president@... ">
+          </div>
+        </div>
+
+        <div class="input-field-wrapper">
+          <label>Mot de passe</label>
+          <div class="input-inner">
+            <i class="pi pi-lock"></i>
+            <input type="password" value="password123">
+          </div>
+        </div>
+
+        <button type="button" class="btn-gold-gradient" (click)="login()">
+          Se connecter à l'espace {{ loginEmail.includes('president') ? 'Président (Admin)' : 'Membre' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 2. TABLEAU DE BORD MASTER ================= -->
+<div class="dashboard-master-layout" *ngIf="isLoggedIn">
+
+  <!-- Sidebar -->
+  <aside class="sidebar-premium">
+    <div class="sidebar-brand-area">
+      <div class="brand-logo-glow"><i class="pi pi-home"></i></div>
+      <span class="brand-title-text">CoopHabitat</span>
+    </div>
+
+    <nav class="sidebar-navigation">
+      <button type="button" class="nav-link-item" [class.active]="currentTab === 'DASHBOARD'" (click)="setTab('DASHBOARD')">
+        <i class="pi pi-chart-bar"></i> Tableau de bord
+      </button>
+
+      <!-- Menu restreint ou global selon le rôle -->
+      <button type="button" class="nav-link-item" [class.active]="currentTab === 'COOPERATEURS'" (click)="setTab('COOPERATEURS')">
+        <i class="pi pi-users"></i> {{ currentUser.role === 'PRESIDENT' ? 'Annuaire Coopérateurs' : 'Mon Profil & Dossier' }}
+      </button>
+
+      <button type="button" class="nav-link-item" [class.active]="currentTab === 'FONCIER'" (click)="setTab('FONCIER')">
+        <i class="pi pi-map"></i> Cadastre & Foncier
+      </button>
+
+      <button type="button" class="nav-link-item" *ngIf="currentUser.role === 'PRESIDENT'" [class.active]="currentTab === 'TRESORERIE'" (click)="setTab('TRESORERIE')">
+        <i class="pi pi-wallet"></i> Trésorerie Globale
+      </button>
+
+      <button type="button" class="nav-link-item" [class.active]="currentTab === 'REPORTS'" (click)="setTab('REPORTS')">
+        <i class="pi pi-file-pdf"></i> Mes Quittances & Reçus
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom-action">
+      <button type="button" class="btn-logout-sleek" (click)="logout()">
+        <i class="pi pi-power-off"></i> Déconnexion
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenu Principal -->
+  <main class="main-workspace">
+
+    <!-- Topbar -->
+    <header class="workspace-topbar">
+      <div class="topbar-titles">
+        <h2 *ngIf="currentTab === 'DASHBOARD'">Espace {{ currentUser.role === 'PRESIDENT' ? 'Président (Administration)' : 'Membre' }}</h2>
+        <h2 *ngIf="currentTab === 'COOPERATEURS'">{{ currentUser.role === 'PRESIDENT' ? 'Annuaire des Coopérateurs' : 'Mon Dossier Personnel' }}</h2>
+        <h2 *ngIf="currentTab === 'FONCIER'">Cadastre & Attributions foncières</h2>
+        <h2 *ngIf="currentTab === 'TRESORERIE'">Trésorerie & Mouvements</h2>
+        <h2 *ngIf="currentTab === 'REPORTS'">Quittances & Reçus Officiels</h2>
+        <p>Connecté : <strong>{{ currentUser.nom }}</strong> — Rôle : <span class="badge-lot" style="background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 4px;">{{ currentUser.role }}</span></p>
+      </div>
+
+      <div class="topbar-right-controls">
+        <button type="button" class="btn-gold-gradient-sm" (click)="openPayment()">
+          <i class="pi pi-bolt"></i> Simuler Paiement Wave
+        </button>
+
+        <div class="user-avatar-card">
+          <div class="avatar-circle">{{ currentUser.role === 'PRESIDENT' ? 'PR' : 'CK' }}</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Zone d'affichage des modules -->
+    <div class="workspace-scroll-area">
+
+      <!-- ================= 2.1. MODULE : DASHBOARD ================= -->
+      <div *ngIf="currentTab === 'DASHBOARD'" class="module-view">
+        <div class="stats-grid-4" *ngIf="currentUser.role === 'PRESIDENT'">
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box gold"><i class="pi pi-wallet"></i></div>
+            <div class="stat-content">
+              <span>Trésorerie Totale</span>
+              <h3>24 500 000 FCFA</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box blue"><i class="pi pi-users"></i></div>
+            <div class="stat-content">
+              <span>Membres Actifs</span>
+              <h3>142 / 150</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box green"><i class="pi pi-map"></i></div>
+            <div class="stat-content">
+              <span>Parcelles Attribuées</span>
+              <h3>88%</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box purple"><i class="pi pi-file"></i></div>
+            <div class="stat-content">
+              <span>Dossiers Validés</span>
+              <h3>128</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard dédié au Membre -->
+        <div class="stats-grid-4" *ngIf="currentUser.role === 'MEMBRE'">
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box gold"><i class="pi pi-home"></i></div>
+            <div class="stat-content">
+              <span>Ma Parcelle Attribuée</span>
+              <h3>Lot Diez D-14</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box green"><i class="pi pi-check-circle"></i></div>
+            <div class="stat-content">
+              <span>Statut Cotisation</span>
+              <h3>À jour (Juillet)</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box blue"><i class="pi pi-file-pdf"></i></div>
+            <div class="stat-content">
+              <span>Mes Quittances</span>
+              <h3>3 Reçus Valides</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-split-grid" *ngIf="currentUser.role === 'PRESIDENT'">
+          <div class="analytics-card-main">
+            <div class="card-head-flex">
+              <div>
+                <h3>Évolution des Cotisations (2026)</h3>
+                <p>Suivi mensuel des versements de la coopérative</p>
+              </div>
+              <span class="badge-growth">+18% ce mois</span>
+            </div>
+            <div class="bars-container-pro">
+              <div class="bar-col"><div class="bar-fill" style="height: 40%;"></div><span>Jan</span></div>
+              <div class="bar-col"><div class="bar-fill" style="height: 55%;"></div><span>Fev</span></div>
+              <div class="bar-col"><div class="bar-fill" style="height: 62%;"></div><span>Mar</span></div>
+              <div class="bar-col"><div class="bar-fill" style="height: 70%;"></div><span>Avr</span></div>
+              <div class="bar-col"><div class="bar-fill" style="height: 82%;"></div><span>Mai</span></div>
+              <div class="bar-col"><div class="bar-fill" style="height: 88%;"></div><span>Juin</span></div>
+              <div class="bar-col highlighted">
+                <div class="tooltip-box">Juillet<br><strong>4 250 000 FCFA</strong></div>
+                <div class="bar-fill gold-bar" style="height: 96%;"></div>
+                <span>Juil</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="analytics-card-side">
+            <h3>Répartition des Lots</h3>
+            <p>État global du cadastre</p>
+            <div class="donut-chart-wrapper">
+              <div class="donut-ring-shape">
+                <div class="donut-center-info">
+                  <strong>150</strong>
+                  <span>Total Lots</span>
+                </div>
+              </div>
+            </div>
+            <div class="legend-list-pro">
+              <div class="legend-item"><span class="dot green"></span> Attribués <strong>(88%)</strong></div>
+              <div class="legend-item"><span class="dot gold"></span> Réservés <strong>(8%)</strong></div>
+              <div class="legend-item"><span class="dot grey"></span> Disponibles <strong>(4%)</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message d'accueil personnalisé pour le Membre -->
+        <div class="reports-banner-card" *ngIf="currentUser.role === 'MEMBRE'">
+          <div class="banner-text">
+            <h3>Bienvenue dans votre espace personnel, {{ currentUser.nom }}</h3>
+            <p>Votre parcelle attitrée est le <strong>Lot Diez D-14</strong> (Secteur Résidentiel Diez). Vous pouvez consulter votre cadastre ou télécharger vos reçus de cotisation en toute sécurité.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 2.2. MODULE : COOPÉRATEURS / MON PROFIL ================= -->
+      <div *ngIf="currentTab === 'COOPERATEURS'" class="module-view">
+        <div class="reports-banner-card">
+          <div class="banner-text">
+            <h3>{{ currentUser.role === 'PRESIDENT' ? 'Annuaire Officiel des Coopérateurs' : 'Mon Profil & Coordonnées Personnelles' }}</h3>
+            <p>{{ currentUser.role === 'PRESIDENT' ? 'Gestion centralisée des membres et statuts.' : 'Vos informations enregistrées auprès de la coopérative.' }}</p>
+          </div>
+          <button type="button" class="btn-gold-gradient-sm" *ngIf="currentUser.role === 'PRESIDENT'" (click)="openAddUserModal()">
+            <i class="pi pi-user-plus"></i> Enrôler un Membre
+          </button>
+        </div>
+
+        <!-- Vue Président : Tableau complet -->
+        <div class="table-card-deluxe" *ngIf="currentUser.role === 'PRESIDENT'">
+          <table class="table-pro">
+            <thead>
+            <tr>
+              <th>Matricule & Membre</th>
+              <th>Contact Mobile</th>
+              <th>Parcelle Attribuée</th>
+              <th>Statut Cotisation</th>
+              <th>Rôle</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let coop of cooperateurs">
+              <td>
+                <div class="member-info-cell">
+                  <div class="mini-avatar">CK</div>
+                  <div>
+                    <strong>{{ coop.nom }}</strong>
+                    <span>{{ coop.email }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>{{ coop.telephone }}</td>
+              <td><span class="badge-lot">{{ coop.parcelle }}</span></td>
+              <td><span class="status-badge success">{{ coop.statut }}</span></td>
+              <td><span class="role-tag president">{{ coop.role }}</span></td>
+              <td><button type="button" class="btn-pdf-download"><i class="pi pi-eye"></i> Détails</button></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Vue Membre : Fiche personnelle unique -->
+        <div class="table-card-deluxe" *ngIf="currentUser.role === 'MEMBRE'" style="padding: 24px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: #cbd5e1;">
+            <p><strong>Nom Complet :</strong> <span style="color: white;">{{ currentUser.nom }}</span></p>
+            <p><strong>Email :</strong> <span style="color: white;">{{ currentUser.email }}</span></p>
+            <p><strong>Téléphone :</strong> <span style="color: white;">{{ currentUser.telephone }}</span></p>
+            <p><strong>Parcelle Attribuée :</strong> <span style="color: #38bdf8; font-weight: bold;">{{ currentUser.parcelle }}</span></p>
+            <p><strong>Statut :</strong> <span class="status-badge success">Membre à jour</span></p>
+            <p><strong>Rôle :</strong> <span class="role-tag">Membre Actif</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 2.3. MODULE : FONCIER & PARCELLES ================= -->
+      <div *ngIf="currentTab === 'FONCIER'" class="module-view">
+        <div class="reports-banner-card">
+          <div class="banner-text">
+            <h3>{{ currentUser.role === 'PRESIDENT' ? 'Cadastre et Aménagement Foncier' : 'Ma Parcelle & Plan Cadastral' }}</h3>
+            <p>{{ currentUser.role === 'PRESIDENT' ? 'Cartographie globale des parcelles et attributions.' : 'Informations techniques et plan cadastral de votre lot attribué.' }}</p>
+          </div>
+          <!-- Le bouton d'ajout de parcelle est strictement réservé au Président -->
+          <button type="button" class="btn-gold-gradient-sm" *ngIf="currentUser.role === 'PRESIDENT'" (click)="openAddParcelleModal()">
+            <i class="pi pi-plus-circle"></i> Ajouter une Parcelle
+          </button>
+        </div>
+
+        <!-- STATS : Visibles uniquement pour le Président -->
+        <div class="stats-grid-4" *ngIf="currentUser.role === 'PRESIDENT'">
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box green"><i class="pi pi-check"></i></div>
+            <div class="stat-content">
+              <span>Parcelles Attribuées</span>
+              <h3>132 Lots</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box gold"><i class="pi pi-clock"></i></div>
+            <div class="stat-content">
+              <span>Réservations en Cours</span>
+              <h3>12 Lots</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box blue"><i class="pi pi-th-large"></i></div>
+            <div class="stat-content">
+              <span>Disponibles</span>
+              <h3>6 Lots</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box purple"><i class="pi pi-map"></i></div>
+            <div class="stat-content">
+              <span>Superficie Totale</span>
+              <h3>45 000 m²</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLEAU GLOBAL : Pour le Président -->
+        <div class="table-card-deluxe" *ngIf="currentUser.role === 'PRESIDENT'">
+          <table class="table-pro">
+            <thead>
+            <tr>
+              <th>Référence Lot</th>
+              <th>Zone / Secteur</th>
+              <th>Superficie</th>
+              <th>Bénéficiaire Attitré</th>
+              <th>Statut Foncier</th>
+              <th>Plan Cadastral</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let p of listeParcelles">
+              <td><strong>{{ p.reference }}</strong></td>
+              <td>{{ p.zone }}</td>
+              <td>{{ p.superficie }}</td>
+              <td>{{ p.beneficiaire }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="{'success': p.statut.includes('Attribué'), 'warning': !p.statut.includes('Attribué')}">
+                  {{ p.statut }}
+                </span>
+              </td>
+              <td>
+                <button type="button" class="btn-pdf-download" (click)="voirDetailsParcelle(p)">
+                  <i class="pi pi-eye"></i> Plan Cadastral
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- VUE CADASTRE PERSONNALISÉE : Pour le Membre (Il ne voit que sa parcelle "Lot Diez D-14") -->
+        <div class="table-card-deluxe" *ngIf="currentUser.role === 'MEMBRE'" style="padding: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 20px; border-radius: 8px; border: 1px solid #334155;">
+            <div>
+              <h4 style="color: #38bdf8; margin-bottom: 8px;"><i class="pi pi-home"></i> Lot Diez D-14</h4>
+              <p style="color: #cbd5e1; margin: 4px 0;"><strong>Secteur :</strong> Secteur Résidentiel Diez</p>
+              <p style="color: #cbd5e1; margin: 4px 0;"><strong>Superficie :</strong> 300 m²</p>
+              <p style="color: #cbd5e1; margin: 4px 0;"><strong>Statut :</strong> <span class="status-badge success">Attribué & Titré</span></p>
+            </div>
+            <div>
+              <button type="button" class="btn-gold-gradient-sm" (click)="voirDetailsParcelle({reference: 'Lot Diez D-14', zone: 'Secteur Résidentiel Diez', superficie: '300 m²', beneficiaire: 'Coumbel Ka', statut: 'Attribué & Titré', plan: 'Plan_Cadastral_Diez_D14.pdf'})">
+                <i class="pi pi-file-pdf"></i> Télécharger / Voir Plan Cadastral
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= 2.4. MODULE : TRÉSORERIE (Admin Uniquement) ================= -->
+      <div *ngIf="currentTab === 'TRESORERIE' && currentUser.role === 'PRESIDENT'" class="module-view">
+        <div class="reports-banner-card">
+          <div class="banner-text">
+            <h3>Registre Financier & Flux de Trésorerie</h3>
+            <p>Suivi en temps réel des entrées et décaissements de la coopérative.</p>
+          </div>
+          <button type="button" class="btn-gold-gradient-sm" (click)="openPayment()">
+            <i class="pi pi-upload"></i> Enregistrer un Encaissement
+          </button>
+        </div>
+
+        <div class="stats-grid-4">
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box gold"><i class="pi pi-arrow-down-right"></i></div>
+            <div class="stat-content">
+              <span>Recettes du Mois</span>
+              <h3>4 250 000 FCFA</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box purple"><i class="pi pi-arrow-up-right"></i></div>
+            <div class="stat-content">
+              <span>Dépenses / Aménagement</span>
+              <h3>1 100 000 FCFA</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box blue"><i class="pi pi-mobile"></i></div>
+            <div class="stat-content">
+              <span>Flux Wave Money</span>
+              <h3>18 200 000 FCFA</h3>
+            </div>
+          </div>
+          <div class="stat-card-deluxe">
+            <div class="stat-icon-box green"><i class="pi pi-shield"></i></div>
+            <div class="stat-content">
+              <span>Fonds de Réserve</span>
+              <h3>5 200 000 FCFA</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card-deluxe">
+          <table class="table-pro">
+            <thead>
+            <tr>
+              <th>Date & Heure</th>
+              <th>Libellé de l'Opération</th>
+              <th>Type de Flux</th>
+              <th>Canal</th>
+              <th>Montant</th>
+              <th>Justificatif</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>12/10/2026 - 14:30</td>
+              <td>Cotisation Ordinaire - Coumbel Ka</td>
+              <td><span class="status-badge success">+ Encaissement</span></td>
+              <td><span class="tag-channel wave">Wave Money</span></td>
+              <td><strong>+ 50 000 FCFA</strong></td>
+              <td>
+                <button type="button" class="btn-pdf-download" (click)="telechargerPdf({
+                  id: 891,
+                  montant: 50000,
+                  date: '12/10/2026 14:30',
+                  type: 'Wave Money',
+                  statut: 'Certifié Validé',
+                  membre: { nom: 'Coumbel Ka', email: 'coumbel.ka@coophabitat.sn' }
+                })">Reçu RC-891</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ================= 2.5. MODULE : REÇUS & RAPPORTS ================= -->
+      <div *ngIf="currentTab === 'REPORTS'" class="module-view">
+        <div class="reports-banner-card">
+          <div class="banner-text">
+            <h3>Quittances Officielles & Reçus Certifiés</h3>
+            <p>Téléchargez vos justificatifs de cotisations validés.</p>
+          </div>
+          <button type="button" class="btn-gold-gradient-sm" (click)="openPayment()">
+            <i class="pi pi-plus"></i> Nouveau Versement
+          </button>
+        </div>
+
+        <div class="table-card-deluxe">
+          <table class="table-pro">
+            <thead>
+            <tr>
+              <th>N° de Quittance</th>
+              <th>Intitulé du Versement</th>
+              <th>Date</th>
+              <th>Montant</th>
+              <th>Mode de Paiement</th>
+              <th>Statut</th>
+              <th>Téléchargement</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><strong>RC-2026-0891</strong></td>
+              <td>Cotisation Mensuelle - Juillet 2026</td>
+              <td>12/10/2026</td>
+              <td>50 000 FCFA</td>
+              <td><span class="tag-channel wave">Wave Money</span></td>
+              <td><span class="status-badge success">Certifié Validé</span></td>
+              <td>
+                <button type="button" class="btn-pdf-download" (click)="telechargerPdf({
+                  id: 891,
+                  montant: 50000,
+                  date: '12/10/2026',
+                  type: 'Wave Money',
+                  statut: 'Certifié Validé',
+                  membre: { nom: currentUser.nom, email: currentUser.email }
+                })">
+                  <i class="pi pi-download"></i> PDF
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ================= 3. MODALE PAIEMENT WAVE ================= -->
+<div class="modal-backdrop-deluxe" *ngIf="showPaymentModal">
+  <div class="modal-box-deluxe">
+    <div class="modal-top">
+      <h3>Passerelle de Paiement Wave</h3>
+      <button type="button" class="modal-exit" (click)="closePayment()">✕</button>
+    </div>
+
+    <div class="modal-content-area">
+      <label>Numéro de téléphone mobile</label>
+      <input type="text" [(ngModel)]="phoneNumber" placeholder="Ex: 77 845 20 11" class="modal-input-field">
+
+      <div class="simulation-btn-row">
+        <button type="button" class="btn-sim-green" (click)="simulateSuccess()">Simuler Succès</button>
+        <button type="button" class="btn-sim-red" (click)="simulatePhoneError()">Simuler Erreur</button>
+      </div>
+
+      <div class="alert-box success" *ngIf="paymentStatus === 'SUCCESS'">
+        <strong>Paiement validé pour le {{ phoneNumber }} !</strong><br>La quittance a été émise.
+      </div>
+
+      <div class="alert-box error" *ngIf="paymentStatus === 'ERROR_PHONE'">
+        <strong>Échec de transaction :</strong> Numéro invalide.
+      </div>
+
+      <button type="button" class="btn-gold-gradient" style="width: 100%; margin-top: 16px;" (click)="closePayment()">
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 4. MODALE ENRÔLEMENT (Admin) ================= -->
+<div class="modal-backdrop-deluxe" *ngIf="showAddUserModal">
+  <div class="modal-box-deluxe">
+    <div class="modal-top">
+      <h3>Enrôler un Nouveau Coopérateur</h3>
+      <button type="button" class="modal-exit" (click)="closeAddUserModal()">✕</button>
+    </div>
+
+    <div class="modal-content-area">
+      <div class="input-field-wrapper" style="margin-bottom: 12px;">
+        <label>Nom complet</label>
+        <input type="text" [(ngModel)]="newUser.nom" placeholder="Ex: Fatou Ndiaye" class="modal-input-field">
+      </div>
+
+      <div class="input-field-wrapper" style="margin-bottom: 12px;">
+        <label>Adresse Email</label>
+        <input type="email" [(ngModel)]="newUser.email" placeholder="Ex: fatou.ndiaye@coophabitat.sn" class="modal-input-field">
+      </div>
+
+      <div class="input-field-wrapper" style="margin-bottom: 12px;">
+        <label>Téléphone Mobile</label>
+        <input type="text" [(ngModel)]="newUser.telephone" placeholder="Ex: +221 70 000 00 00" class="modal-input-field">
+      </div>
+
+      <div class="input-field-wrapper" style="margin-bottom: 20px;">
+        <label>Parcelle Attribuée</label>
+        <input type="text" [(ngModel)]="newUser.parcelle" placeholder="Ex: Lot #D-05 (300m²)" class="modal-input-field">
+      </div>
+
+      <button type="button" class="btn-gold-gradient" style="width: 100%;" (click)="saveNewUser()">
+        Valider l'enrôlement
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 5. MODALE DÉTAILS FONCIER / PLAN CADASTRAL ================= -->
+<div class="modal-backdrop-deluxe" *ngIf="showParcelleModal">
+  <div class="modal-box-deluxe" style="max-width: 600px;">
+    <div class="modal-top">
+      <h3>Détails Foncier & Plan Cadastral</h3>
+      <button type="button" class="modal-exit" (click)="fermerModalParcelle()">✕</button>
+    </div>
+
+    <div class="modal-content-area" *ngIf="selectedParcelle">
+      <div style="margin-bottom: 20px; color: #cbd5e1; line-height: 1.6;">
+        <p><strong>Référence du Lot :</strong> <span style="color: #38bdf8; font-weight: bold;">{{ selectedParcelle.reference }}</span></p>
+        <p><strong>Zone / Secteur :</strong> {{ selectedParcelle.zone }}</p>
+        <p><strong>Superficie :</strong> {{ selectedParcelle.superficie }}</p>
+        <p><strong>Bénéficiaire :</strong> {{ selectedParcelle.beneficiaire }}</p>
+        <p><strong>Statut :</strong> {{ selectedParcelle.statut }}</p>
+        <p><strong>Document Cadastral :</strong> <span style="color: #fbbf24; text-decoration: underline; cursor: pointer;">{{ selectedParcelle.plan }}</span></p>
+      </div>
+
+      <button type="button" class="btn-gold-gradient" style="width: 100%;" (click)="fermerModalParcelle()">
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 6. MODALE AJOUTER UNE PARCELLE (Admin) ================= -->
+<div class="modal-backdrop-deluxe" *ngIf="showAddParcelleModal">
+  <div class="modal-box-deluxe">
+    <div class="modal-top">
+      <h3>Ajouter une Nouvelle Parcelle (Cadastre)</h3>
+      <button type="button" class="modal-exit" (click)="closeAddParcelleModal()">✕</button>
+    </div>
+
+    <div class="modal-content-area">
+      <div class="input-field-wrapper" style="margin-bottom: 12px;">
+        <label>Référence du Lot</label>
+        <input type="text" [(ngModel)]="newParcelle.reference" placeholder="Ex: Lot Diez D-14" class="modal-input-field">
+      </div>
+
+      <div class="input-field-wrapper" style="margin-bottom: 12px;">
+        <label>Zone / Secteur (Secteur d'activité)</label>
+        <input type="text" [(ngModel)]="newParcelle.zone" placeholder="Ex: Résidentiel" class="modal-input-field">
+      </div>
+
+      <div class="input-field-wrapper" style="margin-bottom: 12px;">
+        <label>Superficie</label>
+        <input type="text" [(ngModel)]="newParcelle.superficie" placeholder="Ex: 300 m²" class="modal-input-field">
+      </div>
+
+      <div class="input-field-wrapper" style="margin-bottom: 20px;">
+        <label>Bénéficiaire Attitré</label>
+        <input type="text" [(ngModel)]="newParcelle.beneficiaire" placeholder="Ex: Coumbel Ka ou Non attribué" class="modal-input-field">
+      </div>
+
+      <button type="button" class="btn-gold-gradient" style="width: 100%;" (click)="saveNewParcelle()">
+        Enregistrer la parcelle
+      </button>
+    </div>
+  </div>
+</div>
