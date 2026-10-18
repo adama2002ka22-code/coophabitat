@@ -1,0 +1,14 @@
+package com.coophabitat.backend.repository;
+
+import com.coophabitat.backend.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    // Méthode personnalisée pour retrouver un utilisateur par son email (très utile pour la connexion)
+    Optional<User> findByEmail(String email);
+}

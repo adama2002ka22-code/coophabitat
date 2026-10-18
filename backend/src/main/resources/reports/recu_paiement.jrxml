@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="recu_paiement" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <parameter name="P_ID_PAIEMENT" class="java.lang.Long"/>
+    <parameter name="P_MONTANT" class="java.lang.Double"/>
+    <parameter name="P_DATE" class="java.lang.String"/>
+    <parameter name="P_TYPE" class="java.lang.String"/>
+    <parameter name="P_STATUT" class="java.lang.String"/>
+    <parameter name="P_NOM_MEMBRE" class="java.lang.String"/>
+    <parameter name="P_EMAIL_MEMBRE" class="java.lang.String"/>
+
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+
+    <title>
+        <band height="80" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="30"/>
+                <textElement textAlignment="Center">
+                    <font size="22" isBold="true"/>
+                </textElement>
+                <text><![CDATA[COOPHABITAT]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="45" width="555" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Reçu de Paiement Officiel]]></text>
+            </staticText>
+        </band>
+    </title>
+
+    <detail>
+        <band height="200" splitType="Stretch">
+            <textField>
+                <reportElement x="50" y="20" width="450" height="20"/>
+                <textElement><font size="12"/></textElement>
+                <textFieldExpression><![CDATA["N° de Paiement : " + $P{P_ID_PAIEMENT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="50" width="450" height="20"/>
+                <textElement><font size="12"/></textElement>
+                <textFieldExpression><![CDATA["Membre : " + $P{P_NOM_MEMBRE} + " (" + $P{P_EMAIL_MEMBRE} + ")"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="80" width="450" height="20"/>
+                <textElement><font size="12"/></textElement>
+                <textFieldExpression><![CDATA["Montant : " + $P{P_MONTANT} + " FCFA"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="110" width="450" height="20"/>
+                <textElement><font size="12"/></textElement>
+                <textFieldExpression><![CDATA["Date de paiement : " + $P{P_DATE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="140" width="450" height="20"/>
+                <textElement><font size="12"/></textElement>
+                <textFieldExpression><![CDATA["Type de paiement : " + $P{P_TYPE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="170" width="450" height="20"/>
+                <textElement><font size="12"/></textElement>
+                <textFieldExpression><![CDATA["Statut : " + $P{P_STATUT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="15" width="555" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="10" isItalic="true"/>
+                </textElement>
+                <text><![CDATA[Merci de votre confiance - CoopHabitat]]></text>
+            </staticText>
+        </band>
+    </pageFooter>
+</jasperReport>
