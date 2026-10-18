@@ -9,7 +9,9 @@ import java.util.Date;
 @Component
 public class JwtUtils {
     // Clé secrète pour signer le token (doit être suffisamment longue)
-    private final String jwtSecret = "CoopHabitatSuperSecretKeyForJwtAuthentication2026SecureKey!";
+    private final String jwtSecret = System.getenv().getOrDefault(
+            "JWT_SECRET",
+            "cle-locale-de-developpement-uniquement-0123456789-abcdefghij");
     private final int jwtExpirationMs = 86400000; // 24 heures
 
     private Key getSignKey() {
