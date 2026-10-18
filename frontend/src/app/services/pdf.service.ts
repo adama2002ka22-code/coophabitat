@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class PdfService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/pdf/recu-paiement';
+private apiUrl = `${environment.apiUrl}/api/pdf/recu-paiement`;
 
   telechargerRecuPaiement(
     id: number,
