@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: coophabitat-backend
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/coophabitat}
+    username: ${DB_USER:coophabitat}
+    password: ${DB_PASSWORD:coophabitat}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+server:
+  port: ${PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  health:
+    mail:
+      enabled: false
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-me-change-me-change-me-change-me-0123}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
+  pv:
+    secret: ${PV_SECRET:${app.jwt.secret}}
+    keystore-path: ${PV_KEYSTORE_PATH:classpath:keystore/coophabitat-pv.p12}
+    keystore-password: ${PV_KEYSTORE_PASSWORD:coophabitat-pv-2026}
+    keystore-alias: ${PV_KEYSTORE_ALIAS:coophabitat-pv}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+  seed:
+    enabled: ${SEED_ENABLED:true}
+    password: ${SEED_PASSWORD:ChangeMe123!}
+  scheduler:
+    cron: ${SCHEDULER_CRON:0 0 7 * * *}
+  plan:
+    montant: ${PLAN_MONTANT:50000}
+    jour: ${PLAN_JOUR:5}
+    taux: ${PLAN_TAUX:0.1}
+    fixe: ${PLAN_FIXE:0}
+    grace: ${PLAN_GRACE:0}
+  mail:
+    from: ${MAIL_FROM:no-reply@coophabitat.sn}

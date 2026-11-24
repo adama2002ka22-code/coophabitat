@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="pv_attribution" pageWidth="595" pageHeight="842" columnWidth="515"
+              leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40"
+              whenNoDataType="AllSectionsNoDetail">
+
+    <parameter name="P_PV_NUMERO" class="java.lang.String"/>
+    <parameter name="P_DATE" class="java.lang.String"/>
+    <parameter name="P_LOT" class="java.lang.String"/>
+    <parameter name="P_LOCALISATION" class="java.lang.String"/>
+    <parameter name="P_BENEFICIAIRE" class="java.lang.String"/>
+    <parameter name="P_MODE" class="java.lang.String"/>
+    <parameter name="P_EFFECTUE_PAR" class="java.lang.String"/>
+    <parameter name="P_DETAILS" class="java.lang.String"/>
+    <parameter name="P_STATUT_SIGNATURE" class="java.lang.String"/>
+    <parameter name="P_HASH" class="java.lang.String"/>
+    <parameter name="P_SIGNATURE" class="java.lang.String"/>
+
+    <title>
+        <band height="82">
+            <rectangle>
+                <reportElement x="0" y="0" width="515" height="68" backcolor="#0F766E" mode="Opaque"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="10" y="10" width="495" height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="18" isBold="true" pdfFontName="Helvetica-Bold"/>
+                </textElement>
+                <text><![CDATA[CoopHabitat Senegal]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="10" y="38" width="495" height="20" forecolor="#E6FFFA"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+                </textElement>
+                <textFieldExpression><![CDATA["PROCES-VERBAL D'ATTRIBUTION N° " + $P{P_PV_NUMERO}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <detail>
+        <band height="560">
+            <staticText>
+                <reportElement x="0" y="10" width="160" height="26"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Date d'attribution]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="160" y="10" width="355" height="26"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_DATE}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="36" width="160" height="26"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Lot attribue]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="160" y="36" width="355" height="26"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_LOT}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="62" width="160" height="28"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Localisation / GPS]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="160" y="62" width="355" height="28"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_LOCALISATION}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="90" width="160" height="26" backcolor="#ECFDF5" mode="Opaque"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Beneficiaire]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="160" y="90" width="355" height="26" backcolor="#ECFDF5" mode="Opaque"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_BENEFICIAIRE}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="116" width="160" height="26"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Mode d'attribution]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="160" y="116" width="355" height="26"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_MODE}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="142" width="160" height="26"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Effectue par]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="160" y="142" width="355" height="26"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_EFFECTUE_PAR}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="185" width="515" height="22" forecolor="#0F766E"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+                </textElement>
+                <text><![CDATA[Deroulement et tracabilite]]></text>
+            </staticText>
+            <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+                <reportElement x="0" y="210" width="515" height="90"/>
+                <box topPadding="6" leftPadding="8" rightPadding="8" bottomPadding="6">
+                    <pen lineWidth="0.5" lineColor="#D1D5DB"/>
+                </box>
+                <textElement><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_DETAILS}]]></textFieldExpression>
+            </textField>
+
+            <rectangle>
+                <reportElement positionType="Float" x="0" y="320" width="515" height="120" backcolor="#F9FAFB" mode="Opaque"/>
+                <graphicElement><pen lineWidth="0.8" lineColor="#0F766E"/></graphicElement>
+            </rectangle>
+            <textField>
+                <reportElement positionType="Float" x="12" y="328" width="490" height="20" forecolor="#0F766E"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Signature numerique (PKCS#12 X.509 + HMAC-SHA256) - " + $P{P_STATUT_SIGNATURE}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement positionType="Float" x="12" y="352" width="490" height="24" forecolor="#374151"/>
+                <textElement><font fontName="SansSerif" size="8" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA["Empreinte SHA-256 : " + $P{P_HASH}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement positionType="Float" x="12" y="378" width="490" height="24" forecolor="#374151"/>
+                <textElement><font fontName="SansSerif" size="8" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA["Sceau HMAC-SHA256 : " + $P{P_SIGNATURE}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="12" y="408" width="490" height="24" forecolor="#6B7280"/>
+                <textElement><font fontName="SansSerif" size="8" isItalic="true" pdfFontName="Helvetica-Oblique"/></textElement>
+                <text><![CDATA[Ce document PDF comporte une signature cryptographique X.509 embarquee (RSA 2048 / SHA-256) verifiable dans tout lecteur PDF standard ainsi que via l'API /api/attributions/{id}/verification.]]></text>
+            </staticText>
+        </band>
+    </detail>
+</jasperReport>

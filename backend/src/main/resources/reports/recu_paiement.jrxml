@@ -2,83 +2,142 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="recu_paiement" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+              name="recu_paiement" pageWidth="420" pageHeight="595" columnWidth="360"
+              leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30"
+              whenNoDataType="AllSectionsNoDetail">
 
-    <parameter name="P_ID_PAIEMENT" class="java.lang.Long"/>
-    <parameter name="P_MONTANT" class="java.lang.Double"/>
+    <parameter name="P_RECU_NUMERO" class="java.lang.String"/>
     <parameter name="P_DATE" class="java.lang.String"/>
-    <parameter name="P_TYPE" class="java.lang.String"/>
-    <parameter name="P_STATUT" class="java.lang.String"/>
-    <parameter name="P_NOM_MEMBRE" class="java.lang.String"/>
-    <parameter name="P_EMAIL_MEMBRE" class="java.lang.String"/>
-
-    <background>
-        <band splitType="Stretch"/>
-    </background>
+    <parameter name="P_ADHERENT" class="java.lang.String"/>
+    <parameter name="P_NUMERO_ADHERENT" class="java.lang.String"/>
+    <parameter name="P_MONTANT" class="java.lang.String"/>
+    <parameter name="P_CANAL" class="java.lang.String"/>
+    <parameter name="P_REFERENCE" class="java.lang.String"/>
+    <parameter name="P_SOLDE_RESTANT" class="java.lang.String"/>
 
     <title>
-        <band height="80" splitType="Stretch">
+        <band height="75">
+            <rectangle>
+                <reportElement x="0" y="0" width="360" height="58" backcolor="#0F766E" mode="Opaque"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
             <staticText>
-                <reportElement x="0" y="10" width="555" height="30"/>
-                <textElement textAlignment="Center">
-                    <font size="22" isBold="true"/>
+                <reportElement x="10" y="8" width="340" height="24" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="16" isBold="true" pdfFontName="Helvetica-Bold"/>
                 </textElement>
-                <text><![CDATA[COOPHABITAT]]></text>
+                <text><![CDATA[CoopHabitat Senegal]]></text>
             </staticText>
-            <staticText>
-                <reportElement x="0" y="45" width="555" height="20"/>
-                <textElement textAlignment="Center">
-                    <font size="12"/>
+            <textField>
+                <reportElement x="10" y="34" width="340" height="18" forecolor="#E6FFFA"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold"/>
                 </textElement>
-                <text><![CDATA[Reçu de Paiement Officiel]]></text>
-            </staticText>
+                <textFieldExpression><![CDATA["RECU DE PAIEMENT N° " + $P{P_RECU_NUMERO}]]></textFieldExpression>
+            </textField>
         </band>
     </title>
 
     <detail>
-        <band height="200" splitType="Stretch">
-            <textField>
-                <reportElement x="50" y="20" width="450" height="20"/>
-                <textElement><font size="12"/></textElement>
-                <textFieldExpression><![CDATA["N° de Paiement : " + $P{P_ID_PAIEMENT}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="50" y="50" width="450" height="20"/>
-                <textElement><font size="12"/></textElement>
-                <textFieldExpression><![CDATA["Membre : " + $P{P_NOM_MEMBRE} + " (" + $P{P_EMAIL_MEMBRE} + ")"]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="50" y="80" width="450" height="20"/>
-                <textElement><font size="12"/></textElement>
-                <textFieldExpression><![CDATA["Montant : " + $P{P_MONTANT} + " FCFA"]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="50" y="110" width="450" height="20"/>
-                <textElement><font size="12"/></textElement>
-                <textFieldExpression><![CDATA["Date de paiement : " + $P{P_DATE}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="50" y="140" width="450" height="20"/>
-                <textElement><font size="12"/></textElement>
-                <textFieldExpression><![CDATA["Type de paiement : " + $P{P_TYPE}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="50" y="170" width="450" height="20"/>
-                <textElement><font size="12"/></textElement>
-                <textFieldExpression><![CDATA["Statut : " + $P{P_STATUT}]]></textFieldExpression>
-            </textField>
-        </band>
-    </detail>
-
-    <pageFooter>
-        <band height="50">
+        <band height="240">
             <staticText>
-                <reportElement x="0" y="15" width="555" height="20"/>
-                <textElement textAlignment="Center">
-                    <font size="10" isItalic="true"/>
+                <reportElement x="0" y="10" width="135" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="135" y="10" width="225" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_DATE}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="34" width="135" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Adherent]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="135" y="34" width="225" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_ADHERENT}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="58" width="135" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[N° adherent]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="135" y="58" width="225" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_NUMERO_ADHERENT}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="82" width="135" height="26" backcolor="#ECFDF5" mode="Opaque"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Montant recu]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="135" y="82" width="225" height="26" backcolor="#ECFDF5" mode="Opaque"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_MONTANT}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="108" width="135" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Canal]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="135" y="108" width="225" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_CANAL}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="132" width="135" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Reference]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="135" y="132" width="225" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_REFERENCE}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="156" width="135" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Solde restant du]]></text>
+            </staticText>
+            <textField isBlankWhenNull="true">
+                <reportElement x="135" y="156" width="225" height="24"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_SOLDE_RESTANT}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="198" width="360" height="28" forecolor="#6B7280"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isItalic="true" pdfFontName="Helvetica-Oblique"/>
                 </textElement>
-                <text><![CDATA[Merci de votre confiance - CoopHabitat]]></text>
+                <text><![CDATA[Document genere automatiquement par CoopHabitat (JasperReports) - Fonds verse au compte sequestre commun.]]></text>
             </staticText>
         </band>
-    </pageFooter>
+    </detail>
 </jasperReport>
