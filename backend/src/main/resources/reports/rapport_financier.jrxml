@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="rapport_financier" pageWidth="595" pageHeight="842" columnWidth="515"
+              leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40"
+              whenNoDataType="AllSectionsNoDetail">
+
+    <parameter name="P_TITRE_PERIODE" class="java.lang.String"/>
+    <parameter name="P_BUDGET_PREVISIONNEL" class="java.lang.String"/>
+    <parameter name="P_ENCAISSEMENTS" class="java.lang.String"/>
+    <parameter name="P_DEPENSES" class="java.lang.String"/>
+    <parameter name="P_TRESORERIE" class="java.lang.String"/>
+    <parameter name="P_MEMBRES_STATUT" class="java.lang.String"/>
+
+    <field name="section" class="java.lang.String"/>
+    <field name="categorie" class="java.lang.String"/>
+    <field name="libelle" class="java.lang.String"/>
+    <field name="montant" class="java.lang.String"/>
+
+    <title>
+        <band height="245">
+            <rectangle>
+                <reportElement x="0" y="0" width="515" height="64" backcolor="#0F766E" mode="Opaque"/>
+                <graphicElement><pen lineWidth="0"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="10" y="8" width="495" height="24" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="17" isBold="true" pdfFontName="Helvetica-Bold"/>
+                </textElement>
+                <text><![CDATA[CoopHabitat Senegal]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="10" y="34" width="495" height="20" forecolor="#E6FFFA"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{P_TITRE_PERIODE}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="76" width="265" height="24"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Budget previsionnel (exercice)]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="265" y="76" width="250" height="24"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_BUDGET_PREVISIONNEL}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="100" width="265" height="24"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Encaissements du semestre]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="265" y="100" width="250" height="24"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_ENCAISSEMENTS}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="124" width="265" height="24"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Depenses reelles du semestre]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="265" y="124" width="250" height="24"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_DEPENSES}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="148" width="265" height="26" backcolor="#ECFDF5" mode="Opaque"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Tresorerie disponible (sequestre)]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="265" y="148" width="250" height="26" backcolor="#ECFDF5" mode="Opaque"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_TRESORERIE}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="174" width="265" height="24"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Membres a jour / en retard]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="265" y="174" width="250" height="24"/>
+                <box leftPadding="8"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$P{P_MEMBRES_STATUT}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="214" width="515" height="22" forecolor="#0F766E"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+                </textElement>
+                <text><![CDATA[Detail budgetaire et depenses reelles]]></text>
+            </staticText>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="24">
+            <staticText>
+                <reportElement x="0" y="0" width="95" height="24" backcolor="#F3F4F6" mode="Opaque"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Type]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="95" y="0" width="110" height="24" backcolor="#F3F4F6" mode="Opaque"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Categorie]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="205" y="0" width="190" height="24" backcolor="#F3F4F6" mode="Opaque"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Libelle]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="395" y="0" width="120" height="24" backcolor="#F3F4F6" mode="Opaque"/>
+                <box leftPadding="6" rightPadding="6"><pen lineWidth="0.5" lineColor="#D1D5DB"/></box>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <text><![CDATA[Montant]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="22">
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="0" width="95" height="22"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#E5E7EB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true" pdfFontName="Helvetica-Bold"/></textElement>
+                <textFieldExpression><![CDATA[$F{section}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="95" y="0" width="110" height="22"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#E5E7EB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$F{categorie}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="205" y="0" width="190" height="22"/>
+                <box leftPadding="6"><pen lineWidth="0.5" lineColor="#E5E7EB"/></box>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$F{libelle}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="395" y="0" width="120" height="22"/>
+                <box leftPadding="6" rightPadding="6"><pen lineWidth="0.5" lineColor="#E5E7EB"/></box>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9" pdfFontName="Helvetica"/></textElement>
+                <textFieldExpression><![CDATA[$F{montant}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="24">
+            <staticText>
+                <reportElement x="0" y="4" width="515" height="16" forecolor="#6B7280"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="8" isItalic="true" pdfFontName="Helvetica-Oblique"/>
+                </textElement>
+                <text><![CDATA[CoopHabitat Senegal - Rapport financier officiel genere par JasperReports]]></text>
+            </staticText>
+        </band>
+    </pageFooter>
+</jasperReport>
