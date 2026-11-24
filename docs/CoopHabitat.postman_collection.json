@@ -1,0 +1,424 @@
+{
+  "info": {
+    "name": "CoopHabitat API (v1.0.0)",
+    "description": "Collection complete de l'API REST CoopHabitat (JWT, Membres, Cotisations, Paiements Mobile Money Wave/SendFlash, Lots & Attributions avec PV signe PKCS#12, Comptabilite, Sequestre, Rapports PDF JasperReports / Excel, Assemblees Generales).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "token", "value": "" },
+    { "key": "demoPassword", "value": "ChangeMe123!" },
+    { "key": "membreId", "value": "4" },
+    { "key": "paiementId", "value": "1" },
+    { "key": "lotId", "value": "1" },
+    { "key": "attributionId", "value": "1" },
+    { "key": "assembleeId", "value": "1" },
+    { "key": "notificationId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "1. Authentification",
+      "item": [
+        {
+          "name": "Login - President (stocke {{token}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const data = pm.response.json();",
+                  "  pm.collectionVariables.set('token', data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"president@coophabitat.sn\",\n  \"motDePasse\": \"{{demoPassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Login - Tresorier (stocke {{token}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.collectionVariables.set('token', pm.response.json().token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"tresorier@coophabitat.sn\",\n  \"motDePasse\": \"{{demoPassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Login - Membre en retard (stocke {{token}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.collectionVariables.set('token', pm.response.json().token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"abdoulaye.d@coophabitat.sn\",\n  \"motDePasse\": \"{{demoPassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Inscription membre (public)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Ibrahima Fall\",\n  \"email\": \"ibrahima.fall@coophabitat.sn\",\n  \"telephone\": \"+221771112233\",\n  \"motDePasse\": \"MotDePasse123!\",\n  \"typeMembre\": \"ORDINAIRE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/register"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Membres",
+      "item": [
+        {
+          "name": "Profil connecte (/me)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/membres/me" }
+        },
+        {
+          "name": "Liste des membres (bureau)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/membres" }
+        },
+        {
+          "name": "Creer un membre (President / Secretaire)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Mariama Ba\",\n  \"email\": \"mariama.ba@coophabitat.sn\",\n  \"telephone\": \"+221779998877\",\n  \"motDePasse\": \"MotDePasse123!\",\n  \"typeMembre\": \"ORDINAIRE\",\n  \"role\": \"MEMBRE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/membres"
+          }
+        },
+        {
+          "name": "Activer / Suspendre un membre",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"statut\": \"SUSPENDU\"\n}" },
+            "url": "{{baseUrl}}/api/membres/{{membreId}}/statut"
+          }
+        },
+        {
+          "name": "Situation d'un membre (bureau)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/membres/{{membreId}}/situation" }
+        }
+      ]
+    },
+    {
+      "name": "3. Cotisations & Rappels J-3",
+      "item": [
+        {
+          "name": "Plan de cotisation actif",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/plan-cotisation" }
+        },
+        {
+          "name": "Modifier le plan de cotisation (Tresorier / President)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"montantMensuel\": 50000,\n  \"jourEcheance\": 5,\n  \"tauxPenaliteJournalier\": 0.1,\n  \"penaliteFixe\": 0,\n  \"delaiGraceJours\": 0\n}"
+            },
+            "url": "{{baseUrl}}/api/plan-cotisation"
+          }
+        },
+        {
+          "name": "Ma situation (solde, calendrier, historique)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/cotisations/me" }
+        },
+        {
+          "name": "Generer les echeances (mois courant + suivant)",
+          "request": { "method": "POST", "url": "{{baseUrl}}/api/cotisations/generer" }
+        },
+        {
+          "name": "Declencher les rappels J-3 (Email / SMS / In-app)",
+          "request": { "method": "POST", "url": "{{baseUrl}}/api/cotisations/rappels" }
+        }
+      ]
+    },
+    {
+      "name": "4. Paiements & Recus PDF (JasperReports)",
+      "item": [
+        {
+          "name": "Payer par Mobile Money (Wave / SendFlash sandbox)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telephone\": \"771234567\",\n  \"montant\": 50000,\n  \"operateur\": \"WAVE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/paiements/mobile-money"
+          }
+        },
+        {
+          "name": "Saisie manuelle paiement (Tresorier / President)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"membreId\": {{membreId}},\n  \"montant\": 50000,\n  \"canal\": \"ESPECES\",\n  \"reference\": null\n}"
+            },
+            "url": "{{baseUrl}}/api/paiements"
+          }
+        },
+        {
+          "name": "Mes paiements",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/paiements/me" }
+        },
+        {
+          "name": "Derniers paiements (bureau)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/paiements" }
+        },
+        {
+          "name": "Telecharger recu PDF (JasperReports)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/paiements/{{paiementId}}/recu" }
+        }
+      ]
+    },
+    {
+      "name": "5. Lots & Attributions (PV signe PKCS#12)",
+      "item": [
+        {
+          "name": "Liste des lots (avec GPS)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/lots" }
+        },
+        {
+          "name": "Creer un lot (President / Secretaire)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference\": \"Lot C-05\",\n  \"typeLot\": \"TERRAIN\",\n  \"superficie\": 300,\n  \"localisation\": \"Extension Diamniadio\",\n  \"latitude\": 14.7167,\n  \"longitude\": -17.1833\n}"
+            },
+            "url": "{{baseUrl}}/api/lots"
+          }
+        },
+        {
+          "name": "Changer statut lot (DISPONIBLE / LITIGIEUX)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"statut\": \"LITIGIEUX\"\n}" },
+            "url": "{{baseUrl}}/api/lots/{{lotId}}/statut"
+          }
+        },
+        {
+          "name": "Attribution par tirage au sort auditable",
+          "request": { "method": "POST", "url": "{{baseUrl}}/api/lots/{{lotId}}/tirage" }
+        },
+        {
+          "name": "Attribution par decision de commission (President)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"membreId\": {{membreId}},\n  \"membresCommission\": \"Mamadou Diallo, Aminata Sow, Ousmane Ndiaye\",\n  \"justification\": \"Dossier prioritaire valide en commission\"\n}"
+            },
+            "url": "{{baseUrl}}/api/lots/{{lotId}}/commission"
+          }
+        },
+        {
+          "name": "Liste des attributions",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/attributions" }
+        },
+        {
+          "name": "Telecharger PV d'attribution PDF signe (PKCS#12)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/attributions/{{attributionId}}/pv" }
+        },
+        {
+          "name": "Verifier integrite et signature du PV",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/attributions/{{attributionId}}/verification" }
+        }
+      ]
+    },
+    {
+      "name": "6. Comptabilite, Sequestre & Rapports (PDF / Excel)",
+      "item": [
+        {
+          "name": "Sequestre du fonds commun (tous membres)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/tresorerie/sequestre" }
+        },
+        {
+          "name": "Tableau de bord Tresorier temps reel",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/dashboard" }
+        },
+        {
+          "name": "Budget previsionnel",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/budget?exercice=2026" }
+        },
+        {
+          "name": "Ajouter ligne de budget",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"exercice\": 2026,\n  \"categorie\": \"VRD\",\n  \"libelle\": \"Adduction d'eau potable\",\n  \"montantPrevu\": 8000000\n}"
+            },
+            "url": "{{baseUrl}}/api/budget"
+          }
+        },
+        {
+          "name": "Liste des depenses reelles",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/depenses" }
+        },
+        {
+          "name": "Enregistrer une depense",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categorie\": \"VRD\",\n  \"libelle\": \"Travaux de bornage secteur B\",\n  \"montant\": 750000\n}"
+            },
+            "url": "{{baseUrl}}/api/depenses"
+          }
+        },
+        {
+          "name": "Rapport financier semestriel (JSON)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/rapports/financier?annee=2026&semestre=1" }
+        },
+        {
+          "name": "Export Rapport financier PDF (JasperReports)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/rapports/financier/pdf?annee=2026&semestre=1" }
+        },
+        {
+          "name": "Export Rapport financier Excel (.xlsx)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/rapports/financier/excel?annee=2026&semestre=1" }
+        },
+        {
+          "name": "Journal d'audit (bureau)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/audit" }
+        }
+      ]
+    },
+    {
+      "name": "7. Assemblees Generales Numeriques",
+      "item": [
+        {
+          "name": "Liste des assemblees",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/assemblees" }
+        },
+        {
+          "name": "Detail d'une assemblee",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/assemblees/{{assembleeId}}" }
+        },
+        {
+          "name": "Convoquer une AG (notifie tous les membres)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titre\": \"Assemblee Generale Extraordinaire\",\n  \"dateAssemblee\": \"2026-12-15T10:00:00\",\n  \"lieu\": \"Siege CoopHabitat, Dakar\",\n  \"ordreDuJour\": \"1. Validation comptes semestriels\\n2. Tirage au sort lots Diamniadio\"\n}"
+            },
+            "url": "{{baseUrl}}/api/assemblees"
+          }
+        },
+        {
+          "name": "Enregistrer une deliberation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titre\": \"Adoption budget VRD\",\n  \"resolution\": \"Le budget VRD 2026 est adopte a la majorite\",\n  \"pour\": 28,\n  \"contre\": 2,\n  \"abstention\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/assemblees/{{assembleeId}}/deliberations"
+          }
+        },
+        {
+          "name": "Publier le compte rendu",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"compteRendu\": \"Seance ouverte a 10h00. Quorum atteint. Les resolutions ont ete adoptees.\",\n  \"publier\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/assemblees/{{assembleeId}}/compte-rendu"
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Notifications & Documents Officiels",
+      "item": [
+        {
+          "name": "Mes notifications",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/notifications/me" }
+        },
+        {
+          "name": "Marquer notification comme lue",
+          "request": { "method": "POST", "url": "{{baseUrl}}/api/notifications/{{notificationId}}/lu" }
+        },
+        {
+          "name": "Mes documents officiels (PV, CR, rapports)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/documents" }
+        }
+      ]
+    }
+  ]
+}
