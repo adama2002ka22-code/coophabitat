@@ -1,0 +1,1527 @@
+openapi: 3.0.1
+info:
+  title: CoopHabitat API
+  description: Gestion numerique d'une cooperative d'habitat (OpenAPI 3.0)
+  version: 1.0.0
+servers:
+- url: http://localhost
+  description: Generated server url
+security:
+- bearerAuth: []
+paths:
+  /api/plan-cotisation:
+    get:
+      tags:
+      - Cotisations
+      summary: Plan de cotisation actif
+      operationId: plan
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PlanResponse"
+    put:
+      tags:
+      - Cotisations
+      summary: "Definir un nouveau plan (montant, echeance, penalites) - Tresorier\
+        \ / President"
+      operationId: definir
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlanRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PlanResponse"
+  /api/assemblees/{id}/compte-rendu:
+    put:
+      tags:
+      - Assemblee generale
+      summary: Rediger / publier le compte rendu (President / Secretaire)
+      operationId: compteRendu
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompteRenduRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AssembleeDto"
+  /api/paiements:
+    get:
+      tags:
+      - Paiements
+      summary: Derniers paiements de la cooperative (bureau)
+      operationId: recents
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaiementDto"
+    post:
+      tags:
+      - Paiements
+      summary: Saisie manuelle d'un paiement (Tresorier / President)
+      operationId: manuel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaiementManuelRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaiementDto"
+  /api/paiements/mobile-money:
+    post:
+      tags:
+      - Paiements
+      summary: Payer ma cotisation par Mobile Money (Wave / SendFlash - sandbox)
+      operationId: mobileMoney
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MobileMoneyRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaiementDto"
+  /api/notifications/{id}/lu:
+    post:
+      tags:
+      - Notifications et documents
+      summary: Marquer une notification comme lue
+      operationId: lu
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /api/membres:
+    get:
+      tags:
+      - Membres
+      summary: Liste des membres (bureau)
+      operationId: list
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MembreResponse"
+    post:
+      tags:
+      - Membres
+      summary: Inscrire un membre (President / Secretaire)
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMembreRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MembreResponse"
+  /api/lots:
+    get:
+      tags:
+      - Lots et attributions
+      summary: Liste des lots (visible par tous les membres)
+      operationId: list_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LotDto"
+    post:
+      tags:
+      - Lots et attributions
+      summary: Creer un lot (President / Secretaire)
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LotRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LotDto"
+  /api/lots/{id}/tirage:
+    post:
+      tags:
+      - Lots et attributions
+      summary: Tirage au sort (President / Secretaire)
+      operationId: tirage
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AttributionDto"
+  /api/lots/{id}/commission:
+    post:
+      tags:
+      - Lots et attributions
+      summary: Attribution par decision de commission (President)
+      operationId: commission
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommissionRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AttributionDto"
+  /api/depenses:
+    get:
+      tags:
+      - Comptabilite
+      summary: Depenses reelles (visibles par tous)
+      operationId: depenses
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DepenseDto"
+    post:
+      tags:
+      - Comptabilite
+      summary: Enregistrer une depense (Tresorier / President)
+      operationId: ajouterDepense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepenseRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DepenseDto"
+  /api/cotisations/rappels:
+    post:
+      tags:
+      - Cotisations
+      summary: Declencher manuellement les rappels J-3 (Tresorier / President)
+      operationId: rappels
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+  /api/cotisations/generer:
+    post:
+      tags:
+      - Cotisations
+      summary: Generer les echeances du mois courant et suivant (Tresorier / President)
+      operationId: generer
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+  /api/budget:
+    get:
+      tags:
+      - Comptabilite
+      summary: Budget previsionnel d'un exercice (visible par tous)
+      operationId: budget
+      parameters:
+      - name: exercice
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BudgetLigneDto"
+    post:
+      tags:
+      - Comptabilite
+      summary: Ajouter une ligne de budget (Tresorier / President)
+      operationId: ajouterBudget
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BudgetLigneRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BudgetLigneDto"
+  /api/auth/register:
+    post:
+      tags:
+      - Authentification
+      summary: Inscription d'un membre (role MEMBRE uniquement)
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MembreResponse"
+  /api/auth/login:
+    post:
+      tags:
+      - Authentification
+      summary: "Connexion : retourne un jeton JWT"
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+  /api/assemblees:
+    get:
+      tags:
+      - Assemblee generale
+      summary: "Liste des assemblees (convocations, ordre du jour, deliberations)"
+      operationId: list_2
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AssembleeDto"
+    post:
+      tags:
+      - Assemblee generale
+      summary: Convoquer une AG - notifie tous les membres (President / Secretaire)
+      operationId: convoquer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssembleeRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AssembleeDto"
+  /api/assemblees/{id}/deliberations:
+    post:
+      tags:
+      - Assemblee generale
+      summary: Enregistrer une deliberation (President / Secretaire)
+      operationId: deliberer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeliberationRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AssembleeDto"
+  /api/membres/{id}/statut:
+    patch:
+      tags:
+      - Membres
+      summary: Activer / suspendre un membre (President / Secretaire)
+      operationId: statut
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StatutRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MembreResponse"
+  /api/lots/{id}/statut:
+    patch:
+      tags:
+      - Lots et attributions
+      summary: Marquer un lot disponible / litigieux (President / Secretaire)
+      operationId: statut_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LotStatutRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LotDto"
+  /api/tresorerie/sequestre:
+    get:
+      tags:
+      - Comptabilite
+      summary: Sequestre du fonds commun (visible par tous les membres)
+      operationId: sequestre
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TresorerieDto"
+  /api/rapports/financier:
+    get:
+      tags:
+      - Rapports financiers
+      summary: Rapport financier semestriel (JSON)
+      operationId: json
+      parameters:
+      - name: annee
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: semestre
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RapportFinancier"
+  /api/rapports/financier/pdf:
+    get:
+      tags:
+      - Rapports financiers
+      summary: Export PDF du rapport financier semestriel
+      operationId: pdf
+      parameters:
+      - name: annee
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: semestre
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: byte
+  /api/rapports/financier/excel:
+    get:
+      tags:
+      - Rapports financiers
+      summary: Export Excel du rapport financier semestriel
+      operationId: excel
+      parameters:
+      - name: annee
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: semestre
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: byte
+  /api/paiements/{id}/recu:
+    get:
+      tags:
+      - Paiements
+      summary: Recu PDF d'un paiement (proprietaire ou bureau)
+      operationId: recu
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: byte
+  /api/paiements/me:
+    get:
+      tags:
+      - Paiements
+      summary: Mes paiements
+      operationId: mes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaiementDto"
+  /api/notifications/me:
+    get:
+      tags:
+      - Notifications et documents
+      summary: Mes notifications
+      operationId: mes_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NotificationDto"
+  /api/membres/{id}/situation:
+    get:
+      tags:
+      - Membres
+      summary: Situation de cotisation d'un membre (bureau)
+      operationId: situation
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Situation"
+  /api/membres/me:
+    get:
+      tags:
+      - Membres
+      summary: Profil du membre connecte
+      operationId: me
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MembreResponse"
+  /api/documents:
+    get:
+      tags:
+      - Notifications et documents
+      summary: "Documents officiels (PV, comptes rendus, rapports)"
+      operationId: documents
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DocumentDto"
+  /api/dashboard:
+    get:
+      tags:
+      - Comptabilite
+      summary: "Tableau de bord Tresorier : membres a jour / en retard, tresorerie\
+        \ (President / Tresorier)"
+      operationId: dashboard
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/DashboardDto"
+  /api/cotisations/me:
+    get:
+      tags:
+      - Cotisations
+      summary: "Ma situation : solde cumule, calendrier des paiements, historique"
+      operationId: maSituation
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Situation"
+  /api/audit:
+    get:
+      tags:
+      - Comptabilite
+      summary: Journal d'audit (bureau)
+      operationId: audit
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuditDto"
+  /api/attributions:
+    get:
+      tags:
+      - Lots et attributions
+      summary: "Attributions (bureau : toutes ; membre : les siennes)"
+      operationId: attributions
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AttributionDto"
+  /api/attributions/{id}/verification:
+    get:
+      tags:
+      - Lots et attributions
+      summary: Verifier l'integrite / la signature d'un PV
+      operationId: verification
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VerificationDto"
+  /api/attributions/{id}/pv:
+    get:
+      tags:
+      - Lots et attributions
+      summary: PV d'attribution signe (PDF)
+      operationId: pv
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: byte
+  /api/assemblees/{id}:
+    get:
+      tags:
+      - Assemblee generale
+      summary: Detail d'une assemblee
+      operationId: get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AssembleeDto"
+components:
+  schemas:
+    PlanRequest:
+      required:
+      - montantMensuel
+      - penaliteFixe
+      - tauxPenaliteJournalier
+      type: object
+      properties:
+        montantMensuel:
+          minimum: 1
+          exclusiveMinimum: false
+          type: number
+        jourEcheance:
+          maximum: 28
+          minimum: 1
+          type: integer
+          format: int32
+        tauxPenaliteJournalier:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        penaliteFixe:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+        delaiGraceJours:
+          minimum: 0
+          type: integer
+          format: int32
+    PlanResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        montantMensuel:
+          type: number
+        jourEcheance:
+          type: integer
+          format: int32
+        tauxPenaliteJournalier:
+          type: number
+        penaliteFixe:
+          type: number
+        delaiGraceJours:
+          type: integer
+          format: int32
+        dateEffet:
+          type: string
+          format: date
+    CompteRenduRequest:
+      required:
+      - compteRendu
+      type: object
+      properties:
+        compteRendu:
+          type: string
+        publier:
+          type: boolean
+    AssembleeDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        titre:
+          type: string
+        dateAssemblee:
+          type: string
+          format: date-time
+        lieu:
+          type: string
+        ordreDuJour:
+          type: string
+        statut:
+          type: string
+          enum:
+          - CONVOQUEE
+          - TENUE
+        compteRendu:
+          type: string
+        compteRenduPublie:
+          type: boolean
+        deliberations:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliberationDto"
+    DeliberationDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        titre:
+          type: string
+        resolution:
+          type: string
+        pour:
+          type: integer
+          format: int32
+        contre:
+          type: integer
+          format: int32
+        abstention:
+          type: integer
+          format: int32
+        adoptee:
+          type: boolean
+    PaiementManuelRequest:
+      required:
+      - canal
+      - membreId
+      - montant
+      type: object
+      properties:
+        membreId:
+          type: integer
+          format: int64
+        montant:
+          minimum: 1
+          exclusiveMinimum: false
+          type: number
+        canal:
+          type: string
+          enum:
+          - ESPECES
+          - VIREMENT
+          - WAVE
+          - SENDFLASH
+        reference:
+          type: string
+    PaiementDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        membreId:
+          type: integer
+          format: int64
+        membreNom:
+          type: string
+        numeroAdherent:
+          type: string
+        montant:
+          type: number
+        canal:
+          type: string
+          enum:
+          - ESPECES
+          - VIREMENT
+          - WAVE
+          - SENDFLASH
+        reference:
+          type: string
+        recuNumero:
+          type: string
+        datePaiement:
+          type: string
+          format: date-time
+    MobileMoneyRequest:
+      required:
+      - montant
+      - operateur
+      - telephone
+      type: object
+      properties:
+        telephone:
+          type: string
+        montant:
+          minimum: 1
+          exclusiveMinimum: false
+          type: number
+        operateur:
+          type: string
+    CreateMembreRequest:
+      required:
+      - email
+      - motDePasse
+      - nom
+      - role
+      - typeMembre
+      type: object
+      properties:
+        nom:
+          type: string
+        email:
+          type: string
+        telephone:
+          type: string
+        motDePasse:
+          maxLength: 2147483647
+          minLength: 8
+          type: string
+        typeMembre:
+          type: string
+          enum:
+          - FONDATEUR
+          - ORDINAIRE
+          - BENEFICIAIRE
+        role:
+          type: string
+          enum:
+          - PRESIDENT
+          - TRESORIER
+          - SECRETAIRE
+          - MEMBRE
+    MembreResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        numeroAdherent:
+          type: string
+        nom:
+          type: string
+        email:
+          type: string
+        telephone:
+          type: string
+        typeMembre:
+          type: string
+          enum:
+          - FONDATEUR
+          - ORDINAIRE
+          - BENEFICIAIRE
+        statut:
+          type: string
+          enum:
+          - ACTIF
+          - SUSPENDU
+        role:
+          type: string
+          enum:
+          - PRESIDENT
+          - TRESORIER
+          - SECRETAIRE
+          - MEMBRE
+        dateAdhesion:
+          type: string
+          format: date
+        statutCotisation:
+          type: string
+    LotRequest:
+      required:
+      - reference
+      - typeLot
+      type: object
+      properties:
+        reference:
+          type: string
+        typeLot:
+          type: string
+          enum:
+          - TERRAIN
+          - LOGEMENT
+        superficie:
+          type: number
+          format: double
+        localisation:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+    LotDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        reference:
+          type: string
+        typeLot:
+          type: string
+          enum:
+          - TERRAIN
+          - LOGEMENT
+        superficie:
+          type: number
+          format: double
+        localisation:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        statut:
+          type: string
+          enum:
+          - DISPONIBLE
+          - ATTRIBUE
+          - LITIGIEUX
+        beneficiaire:
+          type: string
+        attributionId:
+          type: integer
+          format: int64
+    AttributionDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        lotId:
+          type: integer
+          format: int64
+        lotReference:
+          type: string
+        beneficiaireId:
+          type: integer
+          format: int64
+        beneficiaireNom:
+          type: string
+        beneficiaireNumero:
+          type: string
+        mode:
+          type: string
+          enum:
+          - TIRAGE_AU_SORT
+          - COMMISSION
+        details:
+          type: string
+        dateAttribution:
+          type: string
+          format: date-time
+        effectuePar:
+          type: string
+        pvNumero:
+          type: string
+        pvHash:
+          type: string
+    CommissionRequest:
+      required:
+      - justification
+      - membreId
+      - membresCommission
+      type: object
+      properties:
+        membreId:
+          type: integer
+          format: int64
+        membresCommission:
+          type: string
+        justification:
+          type: string
+    DepenseRequest:
+      required:
+      - categorie
+      - libelle
+      - montant
+      type: object
+      properties:
+        categorie:
+          type: string
+        libelle:
+          type: string
+        montant:
+          minimum: 1
+          exclusiveMinimum: false
+          type: number
+        dateDepense:
+          type: string
+          format: date
+    DepenseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        dateDepense:
+          type: string
+          format: date
+        categorie:
+          type: string
+        libelle:
+          type: string
+        montant:
+          type: number
+        enregistrePar:
+          type: string
+    BudgetLigneRequest:
+      required:
+      - categorie
+      - libelle
+      - montantPrevu
+      type: object
+      properties:
+        exercice:
+          minimum: 2000
+          type: integer
+          format: int32
+        categorie:
+          type: string
+        libelle:
+          type: string
+        montantPrevu:
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+    BudgetLigneDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        exercice:
+          type: integer
+          format: int32
+        categorie:
+          type: string
+        libelle:
+          type: string
+        montantPrevu:
+          type: number
+    RegisterRequest:
+      required:
+      - email
+      - motDePasse
+      - nom
+      type: object
+      properties:
+        nom:
+          type: string
+        email:
+          type: string
+        telephone:
+          type: string
+        motDePasse:
+          maxLength: 2147483647
+          minLength: 8
+          type: string
+        typeMembre:
+          type: string
+          enum:
+          - FONDATEUR
+          - ORDINAIRE
+          - BENEFICIAIRE
+    LoginRequest:
+      required:
+      - email
+      - motDePasse
+      type: object
+      properties:
+        email:
+          type: string
+        motDePasse:
+          type: string
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        type:
+          type: string
+        membre:
+          $ref: "#/components/schemas/MembreResponse"
+    AssembleeRequest:
+      required:
+      - dateAssemblee
+      - ordreDuJour
+      - titre
+      type: object
+      properties:
+        titre:
+          type: string
+        dateAssemblee:
+          type: string
+          format: date-time
+        lieu:
+          type: string
+        ordreDuJour:
+          type: string
+    DeliberationRequest:
+      required:
+      - resolution
+      - titre
+      type: object
+      properties:
+        titre:
+          type: string
+        resolution:
+          type: string
+        pour:
+          minimum: 0
+          type: integer
+          format: int32
+        contre:
+          minimum: 0
+          type: integer
+          format: int32
+        abstention:
+          minimum: 0
+          type: integer
+          format: int32
+    StatutRequest:
+      required:
+      - statut
+      type: object
+      properties:
+        statut:
+          type: string
+          enum:
+          - ACTIF
+          - SUSPENDU
+    LotStatutRequest:
+      required:
+      - statut
+      type: object
+      properties:
+        statut:
+          type: string
+          enum:
+          - DISPONIBLE
+          - ATTRIBUE
+          - LITIGIEUX
+    TresorerieDto:
+      type: object
+      properties:
+        totalEncaisse:
+          type: number
+        totalDepenses:
+          type: number
+        tresorerieDisponible:
+          type: number
+    RapportFinancier:
+      type: object
+      properties:
+        annee:
+          type: integer
+          format: int32
+        semestre:
+          type: integer
+          format: int32
+        debut:
+          type: string
+          format: date
+        fin:
+          type: string
+          format: date
+        budgetPrevisionnel:
+          type: number
+        lignesBudget:
+          type: array
+          items:
+            $ref: "#/components/schemas/BudgetLigneDto"
+        encaissements:
+          type: number
+        depenses:
+          type: number
+        depensesParCategorie:
+          type: object
+          additionalProperties:
+            type: number
+        tresorerieDisponible:
+          type: number
+        membresAJour:
+          type: integer
+          format: int64
+        membresEnRetard:
+          type: integer
+          format: int64
+    NotificationDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        sujet:
+          type: string
+        message:
+          type: string
+        dateCreation:
+          type: string
+          format: date-time
+        lu:
+          type: boolean
+    EcheanceDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        dateEcheance:
+          type: string
+          format: date
+        montantDu:
+          type: number
+        penalite:
+          type: number
+        montantPaye:
+          type: number
+        solde:
+          type: number
+        statut:
+          type: string
+    Situation:
+      type: object
+      properties:
+        membreId:
+          type: integer
+          format: int64
+        nom:
+          type: string
+        numeroAdherent:
+          type: string
+        totalPaye:
+          type: number
+        soldeRestantDu:
+          type: number
+        penalitesTotales:
+          type: number
+        statutCotisation:
+          type: string
+        prochaineEcheance:
+          type: string
+          format: date
+        calendrier:
+          type: array
+          items:
+            $ref: "#/components/schemas/EcheanceDto"
+        paiements:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaiementDto"
+    DocumentDto:
+      type: object
+      properties:
+        titre:
+          type: string
+        type:
+          type: string
+        date:
+          type: string
+          format: date
+        url:
+          type: string
+    DashboardDto:
+      type: object
+      properties:
+        membresActifs:
+          type: integer
+          format: int64
+        membresAJour:
+          type: integer
+          format: int64
+        membresEnRetard:
+          type: integer
+          format: int64
+        totalImpayes:
+          type: number
+        tresorerie:
+          $ref: "#/components/schemas/TresorerieDto"
+        retardataires:
+          type: array
+          items:
+            $ref: "#/components/schemas/RetardataireDto"
+    RetardataireDto:
+      type: object
+      properties:
+        membreId:
+          type: integer
+          format: int64
+        nom:
+          type: string
+        numeroAdherent:
+          type: string
+        telephone:
+          type: string
+        soldeRestantDu:
+          type: number
+        joursRetardMax:
+          type: integer
+          format: int64
+    AuditDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        dateAction:
+          type: string
+          format: date-time
+        acteur:
+          type: string
+        action:
+          type: string
+        entite:
+          type: string
+        entiteId:
+          type: integer
+          format: int64
+        details:
+          type: string
+    VerificationDto:
+      type: object
+      properties:
+        pvNumero:
+          type: string
+        valide:
+          type: boolean
+        hash:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
