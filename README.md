@@ -1,11 +1,19 @@
-# CoopHabitat — Gestion numérique d'une coopérative d'habitat
+# CoopHabitat — Gestion numérique d'une coopérative d'habitat (Projet 5 / 14)
 
-Stack : **Spring Boot 3 (Java 17/21) · Angular 20 (PWA) · PostgreSQL 16 · JasperReports 6.20 · Apache POI**.
+**Université Assane Seck de Ziguinchor (UASZ)** · **Licence 3 — Ingénierie Informatique** · **Professeur : Dr Khalifa Gaye**  
+**Groupe 11** : Abdourahmane DIAW (`202300419`) · Coumbel KA (`202201746`) · Ousmane NIANG (`202300538`) · Hawa DIALLO (`202300474`) · Papa Abib TRAORE (`202201985`).
+
+Stack : **Spring Boot 3 (Java 17/21) · Angular 20 (PWA) · PostgreSQL 16 · JasperReports 6.20 · BouncyCastle PKCS#12 · Apache POI**.
+
+### Accès en ligne (Production)
+- **Application Web / PWA (Netlify)** : https://coophabitat.netlify.app
+- **API & Documentation Swagger UI (Render)** : https://coophabitat-api-vmh2.onrender.com/swagger-ui.html
+- **Health Check API** : https://coophabitat-api-vmh2.onrender.com/actuator/health *(plan gratuit Render : prévoir ~45 s au tout premier réveil)*
 
 ```
-backend/    API REST Spring Boot (JWT, RBAC 4 roles, OpenAPI 3, JasperReports + PKCS#12, JUnit + JaCoCo >= 60 %)
+backend/    API REST Spring Boot (JWT, RBAC 4 roles, OpenAPI 3, JasperReports + PKCS#12, JUnit + JaCoCo 89,24 %)
 frontend/   Application Angular mobile-first + Service Worker (mode hors ligne partiel)
-docs/       UML (Mermaid), collection Postman, spec OpenAPI, guide de deploiement
+docs/       UML (Mermaid), collection Postman, spec OpenAPI, captures, guide de deploiement
 ```
 
 ---
