@@ -53,7 +53,14 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource(@Value("${app.cors.allowed-origins}") String origins) {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(Arrays.stream(origins.split(",")).map(String::trim).toList());
+        java.util.List<String> allowed = new java.util.ArrayList<>(Arrays.stream(origins.split(","))
+                .map(s -> s.trim().replaceAll("/+$", ""))
+                .filter(s -> !s.isBlank())
+                .toList());
+        if (!allowed.contains("https://coophabitat.netlify.app")) {
+            allowed.add("https://coophabitat.netlify.app");
+        }
+        cfg.setAllowedOrigins(allowed);
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));
         cfg.setExposedHeaders(List.of("Content-Disposition"));
