@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-landing',
@@ -351,4 +352,11 @@ import { RouterLink } from '@angular/router';
   </div>
   `
 })
-export class LandingComponent {}
+export class LandingComponent implements OnInit {
+  ngOnInit() {
+    // Préchauffe l'API Render en arrière-plan dès l'ouverture de la vitrine (plan gratuit)
+    if (environment.apiUrl) {
+      fetch(`${environment.apiUrl}/actuator/health`).catch(() => {});
+    }
+  }
+}

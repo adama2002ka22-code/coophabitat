@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../core/auth.service';
 import { errMsg } from '../core/util';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -51,10 +52,15 @@ import { errMsg } from '../core/util';
         <label>Mot de passe</label>
         <input type="password" [(ngModel)]="password" autocomplete="current-password" (keyup.enter)="submit()">
 
+        @if (wakingHint && !error) {
+          <div class="msg" style="background:#ecfdf5;border:1px solid #6ee7b7;color:#065f46;font-size:.84rem">
+            ⏳ Réveil du serveur cloud en cours (plan gratuit Render, ~30–50 s à la 1ʳᵉ ouverture)… Merci de patienter quelques instants.
+          </div>
+        }
         @if (error) { <div class="msg err">{{ error }}</div> }
         <p style="margin-top:1rem">
           <button class="btn primary" style="width:100%;padding:.7rem" [disabled]="loading" (click)="submit()">
-            {{ loading ? 'Connexion en cours...' : 'Se connecter' }}
+            {{ loading ? (wakingHint ? 'Réveil du serveur en cours…' : 'Connexion en cours...') : 'Se connecter' }}
           </button>
         </p>
         <p class="muted" style="text-align:center;margin-bottom:0">
@@ -64,10 +70,10 @@ import { errMsg } from '../core/util';
     </main>
   </div>`
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
-  email = ''; password = ''; error = ''; loading = false;
+  email = ''; password = ''; error = ''; loading = false; wakingHint = false;
   demos = [
     { label: 'Président', email: 'president@coophabitat.sn' },
     { label: 'Trésorier', email: 'tresorier@coophabitat.sn' },
@@ -75,6 +81,14 @@ export class LoginComponent {
     { label: 'Membre à jour', email: 'coumbel.ka@coophabitat.sn' },
     { label: 'Membre en retard', email: 'abdoulaye.d@coophabitat.sn' }
   ];
+  ngOnInit() {
+    if (!environment.apiUrl) return;
+    let done = false;
+    const t = setTimeout(() => { if (!done) this.wakingHint = true; }, 2500);
+    fetch(`${environment.apiUrl}/actuator/health`)
+      .then(() => { done = true; clearTimeout(t); this.wakingHint = false; })
+      .catch(() => { done = true; clearTimeout(t); });
+  }
   fillDemo(email: string) {
     this.email = email;
     this.password = 'ChangeMe123!';
@@ -83,9 +97,10 @@ export class LoginComponent {
   submit() {
     if (!this.email || !this.password) { this.error = 'Email et mot de passe requis.'; return; }
     this.loading = true; this.error = '';
+    const t = setTimeout(() => { if (this.loading) this.wakingHint = true; }, 3000);
     this.auth.login(this.email, this.password).subscribe({
-      next: () => this.router.navigate(['/app/accueil']),
-      error: e => { this.error = errMsg(e); this.loading = false; }
+      next: () => { clearTimeout(t); this.wakingHint = false; this.router.navigate(['/app/accueil']); },
+      error: e => { clearTimeout(t); this.wakingHint = false; this.error = errMsg(e); this.loading = false; }
     });
   }
 }
